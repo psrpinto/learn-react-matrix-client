@@ -12,20 +12,36 @@ class App extends React.Component {
             accessToken: 'syt_YWRtaW4_WgzGYbdhFRZdOJTGxUzx_0NPo3T',
         });
         this.state = {
-            isLoading: true
+            status: 'loading',
+            rooms: [],
         };
     }
 
     componentDidMount() {
-        this.matrixClient.startClient({}).then(() => {
-            this.setState({isLoading: false});
-        }).catch((error) => {
+        this.matrixClient.startClient({}).catch(error => {
+            this.setState({status: 'failed'});
             console.log('Initial sync failed: ' + error);
+        });
+
+        this.matrixClient.once('sync', state => {
+            if (state !== 'PREPARED') {
+                this.setState({status: 'failed'});
+                return;
+            }
+
+            this.setState({status: 'loaded'});
+
+            this.matrixClient.getJoinedRooms().then(data => {
+                const rooms = data['joined_rooms'].map(joinedRoomId => {
+                    return this.matrixClient.getRoom(joinedRoomId);
+                });
+                this.setState({rooms: rooms});
+            }).catch(error => console.log('Failed to fetch joined rooms: ' + error));
         });
     }
 
     render() {
-        if (this.state.isLoading) {
+        if (this.state.status === 'loading') {
             return (
                 <div className="LoadingScreen">
                     Loading....
@@ -33,9 +49,17 @@ class App extends React.Component {
             );
         }
 
+        if (this.state.status === 'failed') {
+            return (
+                <div className="ErrorScreen">
+                    Failed to load
+                </div>
+            );
+        }
+
         return (
             <div className="App">
-                <RoomList />
+                <RoomList rooms={this.state.rooms}/>
             </div>
         );
     }
