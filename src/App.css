@@ -4,6 +4,7 @@
     width: 10%;
     cursor: pointer;
     padding: 10px;
+    list-style: none;
 }
 .roomList li {
     padding: 10px;
@@ -20,7 +21,9 @@
     float: left;
     width: 30%;
     height: 100%;
+    padding: 20px;
     margin-left: 10px;
+    list-style: none;
 }
 
 .timelineEvent {

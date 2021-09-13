@@ -16,16 +16,14 @@ class Timeline extends React.Component {
         });
 
         return (
-            <div className='timeline'>
-                <ul style={{listStyle: 'none'}}>
-                    {messages.map(event => (
-                        <li key={event.event_id}>
-                            <TimelineEvent event={event}/>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        )
+            <ul className="timeline">
+                {messages.map(event => (
+                    <li key={event.event_id}>
+                        <TimelineEvent event={event}/>
+                    </li>
+                ))}
+            </ul>
+        );
     }
 }
 

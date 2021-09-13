@@ -25,17 +25,15 @@ class RoomList extends React.Component {
 
     render() {
         return (
-            <div className="roomList">
-                <ul style={{listStyle: 'none'}}>
-                    {this.props.rooms.map(room => (
-                        <li key={room.name}
-                            className={this.state.selectedRoomName === room.name ? 'selected' : ''}
-                            onClick={() => this.selectRoom(room)}>
-                            <span>{room.name}</span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            <ul className="roomList">
+                {this.props.rooms.map(room => (
+                    <li key={room.name}
+                        className={this.state.selectedRoomName === room.name ? 'selected' : ''}
+                        onClick={() => this.selectRoom(room)}>
+                        <span>{room.name}</span>
+                    </li>
+                ))}
+            </ul>
         );
     }
 }
