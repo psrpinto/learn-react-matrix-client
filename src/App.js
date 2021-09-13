@@ -7,7 +7,7 @@ import Timeline from "./Timeline";
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.matrixClient = sdk.createClient({
+        this.client = sdk.createClient({
             baseUrl: 'http://localhost:8008',
             userId: '@admin:matrix.test',
             accessToken: 'syt_YWRtaW4_WgzGYbdhFRZdOJTGxUzx_0NPo3T',
@@ -20,15 +20,15 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        this.matrixClient.once('sync', state => {
+        this.client.once('sync', state => {
             if (state !== 'PREPARED') {
                 this.setState({status: 'failed'});
                 return;
             }
 
-            this.matrixClient.getJoinedRooms().then(data => {
+            this.client.getJoinedRooms().then(data => {
                 const rooms = data['joined_rooms'].map(joinedRoomId => {
-                    return this.matrixClient.getRoom(joinedRoomId);
+                    return this.client.getRoom(joinedRoomId);
                 });
                 this.setState({
                     status: 'loaded',
@@ -37,7 +37,7 @@ class App extends React.Component {
             }).catch(error => console.log('Failed to fetch joined rooms: ' + error));
         });
 
-        this.matrixClient.startClient({}).catch(error => {
+        this.client.startClient({}).catch(error => {
             this.setState({status: 'failed'});
             console.log('Initial sync failed: ' + error);
         });
