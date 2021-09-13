@@ -14,12 +14,19 @@ class RoomList extends React.Component {
     }
 
     render() {
+        let selectedRoomName = this.state.selectedRoomName;
+
+        if (!selectedRoomName) {
+            let firstRoom = this.props.rooms ? this.props.rooms.find(() => true) : false;
+            selectedRoomName = firstRoom ? firstRoom.name : '';
+        }
+
         return (
             <div className="roomList">
                 <ul style={{listStyle: 'none'}}>
                     {this.props.rooms.map(room => (
                         <li key={room.name}
-                            className={this.state.selectedRoomName === room.name ? 'selected' : ''}
+                            className={selectedRoomName === room.name ? 'selected' : ''}
                             onClick={() => this.setSelected(room)}>
                             <span>{room.name}</span>
                         </li>

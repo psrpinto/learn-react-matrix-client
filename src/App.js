@@ -2,6 +2,7 @@ import './App.css';
 import React from "react";
 import RoomList from "./RoomList";
 import * as sdk from "matrix-js-sdk";
+import Timeline from "./Timeline";
 
 class App extends React.Component {
     constructor(props) {
@@ -60,6 +61,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 <RoomList rooms={this.state.rooms}/>
+                <Timeline />
             </div>
         );
     }
