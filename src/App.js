@@ -1,7 +1,7 @@
 import './App.css';
 import React from "react";
-import RoomList from "./RoomList";
 import * as sdk from "matrix-js-sdk";
+import RoomList from "./RoomList";
 import Timeline from "./Timeline";
 
 class App extends React.Component {
@@ -26,15 +26,9 @@ class App extends React.Component {
                 return;
             }
 
-            this.client.getJoinedRooms().then(data => {
-                const rooms = data['joined_rooms'].map(joinedRoomId => {
-                    return this.client.getRoom(joinedRoomId);
-                });
-                this.setState({
-                    status: 'loaded',
-                    rooms: rooms
-                });
-            }).catch(error => console.log('Failed to fetch joined rooms: ' + error));
+            this.setState({
+                status: 'loaded',
+            });
         });
 
         this.client.startClient({}).catch(error => {
@@ -62,7 +56,7 @@ class App extends React.Component {
 
         return (
             <div className="App">
-                <RoomList rooms={this.state.rooms}
+                <RoomList client={this.client}
                           onSelectionChange={(newlySelectedRoom) => this.setState({selectedRoom: newlySelectedRoom})}/>
                 <Timeline room={this.state.selectedRoom}/>
             </div>
