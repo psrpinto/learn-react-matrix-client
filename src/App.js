@@ -19,11 +19,6 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        this.matrixClient.startClient({}).catch(error => {
-            this.setState({status: 'failed'});
-            console.log('Initial sync failed: ' + error);
-        });
-
         this.matrixClient.once('sync', state => {
             if (state !== 'PREPARED') {
                 this.setState({status: 'failed'});
@@ -38,6 +33,11 @@ class App extends React.Component {
                 });
                 this.setState({rooms: rooms});
             }).catch(error => console.log('Failed to fetch joined rooms: ' + error));
+        });
+
+        this.matrixClient.startClient({}).catch(error => {
+            this.setState({status: 'failed'});
+            console.log('Initial sync failed: ' + error);
         });
     }
 
