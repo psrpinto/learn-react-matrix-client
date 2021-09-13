@@ -9,17 +9,19 @@ class RoomList extends React.Component {
         };
     }
 
-    handleClick(room) {
+    selectRoom(room) {
+        if (!room) {
+            return;
+        }
+
         this.setState({selectedRoomName: room.name})
         this.props.onSelectionChange(room);
     }
 
     render() {
-        let selectedRoomName = this.state.selectedRoomName;
-
-        if (!selectedRoomName) {
+        if (!this.state.selectedRoomName) {
             let firstRoom = this.props.rooms ? this.props.rooms.find(() => true) : false;
-            selectedRoomName = firstRoom ? firstRoom.name : '';
+            this.selectRoom(firstRoom);
         }
 
         return (
@@ -27,8 +29,8 @@ class RoomList extends React.Component {
                 <ul style={{listStyle: 'none'}}>
                     {this.props.rooms.map(room => (
                         <li key={room.name}
-                            className={selectedRoomName === room.name ? 'selected' : ''}
-                            onClick={() => this.handleClick(room)}>
+                            className={this.state.selectedRoomName === room.name ? 'selected' : ''}
+                            onClick={() => this.selectRoom(room)}>
                             <span>{room.name}</span>
                         </li>
                     ))}
