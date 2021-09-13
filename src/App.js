@@ -14,9 +14,34 @@ class App extends React.Component {
         });
         this.state = {
             status: 'loading',
-            rooms: [],
             selectedRoom: null,
         };
+    }
+
+    render() {
+        if (this.state.status === 'loaded') {
+            return (
+                <div className="App">
+                    <RoomList client={this.client}
+                              onSelectionChange={(newlySelectedRoom) => this.setState({selectedRoom: newlySelectedRoom})}/>
+                    <Timeline room={this.state.selectedRoom}/>
+                </div>
+            );
+        }
+
+        if (this.state.status === 'loading') {
+            return (
+                <div className="LoadingScreen">
+                    Loading....
+                </div>
+            );
+        }
+
+        return (
+            <div className="ErrorScreen">
+                Failed to load
+            </div>
+        );
     }
 
     componentDidMount() {
@@ -35,32 +60,6 @@ class App extends React.Component {
             this.setState({status: 'failed'});
             console.log('Initial sync failed: ' + error);
         });
-    }
-
-    render() {
-        if (this.state.status === 'loading') {
-            return (
-                <div className="LoadingScreen">
-                    Loading....
-                </div>
-            );
-        }
-
-        if (this.state.status === 'failed') {
-            return (
-                <div className="ErrorScreen">
-                    Failed to load
-                </div>
-            );
-        }
-
-        return (
-            <div className="App">
-                <RoomList client={this.client}
-                          onSelectionChange={(newlySelectedRoom) => this.setState({selectedRoom: newlySelectedRoom})}/>
-                <Timeline room={this.state.selectedRoom}/>
-            </div>
-        );
     }
 }
 
