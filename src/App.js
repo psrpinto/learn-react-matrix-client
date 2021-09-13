@@ -26,13 +26,14 @@ class App extends React.Component {
                 return;
             }
 
-            this.setState({status: 'loaded'});
-
             this.matrixClient.getJoinedRooms().then(data => {
                 const rooms = data['joined_rooms'].map(joinedRoomId => {
                     return this.matrixClient.getRoom(joinedRoomId);
                 });
-                this.setState({rooms: rooms});
+                this.setState({
+                    status: 'loaded',
+                    rooms: rooms
+                });
             }).catch(error => console.log('Failed to fetch joined rooms: ' + error));
         });
 

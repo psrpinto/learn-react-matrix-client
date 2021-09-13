@@ -9,6 +9,11 @@ class RoomList extends React.Component {
         };
     }
 
+    componentDidMount() {
+        let firstRoom = this.props.rooms ? this.props.rooms.find(() => true) : false;
+        this.selectRoom(firstRoom);
+    }
+
     selectRoom(room) {
         if (!room) {
             return;
@@ -19,11 +24,6 @@ class RoomList extends React.Component {
     }
 
     render() {
-        if (!this.state.selectedRoomName) {
-            let firstRoom = this.props.rooms ? this.props.rooms.find(() => true) : false;
-            this.selectRoom(firstRoom);
-        }
-
         return (
             <div className="roomList">
                 <ul style={{listStyle: 'none'}}>
