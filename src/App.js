@@ -15,6 +15,7 @@ class App extends React.Component {
         this.state = {
             status: 'loading',
             rooms: [],
+            selectedRoom: null,
         };
     }
 
@@ -60,8 +61,9 @@ class App extends React.Component {
 
         return (
             <div className="App">
-                <RoomList rooms={this.state.rooms}/>
-                <Timeline />
+                <RoomList rooms={this.state.rooms}
+                          onSelectionChange={(newlySelectedRoom) => this.setState({selectedRoom: newlySelectedRoom})}/>
+                <Timeline room={this.state.selectedRoom}/>
             </div>
         );
     }

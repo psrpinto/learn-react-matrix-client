@@ -9,8 +9,9 @@ class RoomList extends React.Component {
         };
     }
 
-    setSelected(room) {
+    handleClick(room) {
         this.setState({selectedRoomName: room.name})
+        this.props.onSelectionChange(room);
     }
 
     render() {
@@ -27,7 +28,7 @@ class RoomList extends React.Component {
                     {this.props.rooms.map(room => (
                         <li key={room.name}
                             className={selectedRoomName === room.name ? 'selected' : ''}
-                            onClick={() => this.setSelected(room)}>
+                            onClick={() => this.handleClick(room)}>
                             <span>{room.name}</span>
                         </li>
                     ))}
