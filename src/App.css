@@ -11,11 +11,27 @@
 .roomList li.selected {
     border: 1px solid red;
 }
+.roomList li:hover {
+    background-color: aliceblue;
+}
 
 .timeline {
     border: 1px solid green;
     float: left;
-    width: 60%;
+    width: 30%;
     height: 100%;
     margin-left: 10px;
+}
+
+.timelineEvent {
+    padding: 5px;
+}
+.timelineEvent:hover {
+    background-color: aliceblue;
+}
+.timelineEvent .timestamp {
+    color: grey;
+}
+.timelineEvent .sender {
+    color: forestgreen;
 }
