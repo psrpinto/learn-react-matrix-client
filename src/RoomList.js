@@ -3,9 +3,7 @@ import React from "react";
 class RoomList extends React.Component {
     constructor(props) {
         super(props);
-
         this.client = props.client;
-        this.onSelectionChange = props.onSelectionChange;
 
         this.state = {
             rooms: [],
@@ -29,7 +27,7 @@ class RoomList extends React.Component {
 
     selectRoom(room) {
         this.setState({selectedRoomId: room.roomId})
-        this.onSelectionChange(room);
+        this.props.onSelectionChange(room);
     }
 
     componentDidMount() {
