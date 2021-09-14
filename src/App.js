@@ -24,7 +24,8 @@ class App extends React.Component {
                 <div className="App">
                     <RoomList client={this.client}
                               onSelectionChange={(newlySelectedRoom) => this.setState({selectedRoom: newlySelectedRoom})}/>
-                    <Timeline room={this.state.selectedRoom}/>
+                    <Timeline client={this.client}
+                              room={this.state.selectedRoom}/>
                 </div>
             );
         }

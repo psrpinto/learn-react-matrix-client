@@ -2,11 +2,29 @@ import React from "react";
 import TimelineEvent from "./TimelineEvent";
 
 class Timeline extends React.Component {
-    render() {
-        if (!this.props.room) {
-            return null;
-        }
+    constructor(props) {
+        super(props);
 
+        this.client = props.client;
+
+        this.state = {
+            messages: [],
+        }
+    }
+
+    render() {
+        return (
+            <ul className="timeline">
+                {this.state.messages.map(event => (
+                    <li key={event.event_id}>
+                        <TimelineEvent event={event}/>
+                    </li>
+                ))}
+            </ul>
+        );
+    }
+
+    parseTimeline() {
         let events = this.props.room.timeline.map(timelineEntry => {
             return timelineEntry.event;
         });
@@ -15,15 +33,27 @@ class Timeline extends React.Component {
             return event.type === 'm.room.message' && event.content.body;
         });
 
-        return (
-            <ul className="timeline">
-                {messages.map(event => (
-                    <li key={event.event_id}>
-                        <TimelineEvent event={event}/>
-                    </li>
-                ))}
-            </ul>
-        );
+        this.setState({messages});
+    }
+
+    componentDidUpdate(previousProps) {
+        if (!this.props.room) {
+            return;
+        }
+
+        if (previousProps.room && this.props.room.roomId === previousProps.room.roomId) {
+            return;
+        }
+
+        this.parseTimeline();
+
+        this.client.on("Room.timeline", (event, room, toStartOfTimeline) => {
+            if (this.props.room.roomId !== room.roomId) {
+                return;
+            }
+
+            this.parseTimeline();
+        });
     }
 }
 
