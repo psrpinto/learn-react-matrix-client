@@ -1,7 +1,20 @@
 import React from "react";
+import {MatrixClient, Room} from "matrix-js-sdk";
 
-class RoomList extends React.Component {
-    constructor(props) {
+interface Props {
+    client: MatrixClient;
+    onSelectionChange: (room: Room) => void;
+}
+
+interface State {
+    rooms: Room[];
+    selectedRoomId: string;
+}
+
+class RoomList extends React.Component<Props, State> {
+    client: MatrixClient;
+
+    constructor(props: Props) {
         super(props);
         this.client = props.client;
 
@@ -25,19 +38,17 @@ class RoomList extends React.Component {
         );
     }
 
-    selectRoom(room) {
-        this.setState({selectedRoomId: room.roomId})
-        this.props.onSelectionChange(room);
+    selectRoom(room: Room|undefined) {
+        if (room) {
+            this.setState({selectedRoomId: room.roomId})
+            this.props.onSelectionChange(room);
+        }
     }
 
     componentDidMount() {
         this.client.getJoinedRooms()
-            .then(data => {
-                if (!data['joined_rooms'] || data['joined_rooms'].length === 0) {
-                    return;
-                }
-
-                const rooms = data['joined_rooms'].map(roomId => {
+            .then(response => {
+                const rooms = response.joined_rooms.map((roomId: string): Room => {
                     return this.client.getRoom(roomId);
                 });
 
