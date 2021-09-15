@@ -4,7 +4,7 @@ import {IEvent, MatrixClient, Room} from "matrix-js-sdk";
 
 interface Props {
     client: MatrixClient;
-    room: Room|null;
+    room: Room;
 }
 
 interface State {
@@ -37,10 +37,6 @@ class Timeline extends React.Component<Props, State> {
     }
 
     private parseTimeline() {
-        if (!this.props.room) {
-            return;
-        }
-
         let events = this.props.room.timeline.map((timelineEvent) => {
             return timelineEvent.getEffectiveEvent();
         });
@@ -52,23 +48,21 @@ class Timeline extends React.Component<Props, State> {
         this.setState({messages});
     }
 
-    componentDidUpdate(previousProps: Props) {
-        if (!this.props.room) {
-            return;
-        }
+    componentDidMount() {
+        this.parseTimeline();
+    }
 
+    componentDidUpdate(previousProps: Props) {
         if (previousProps.room && this.props.room.roomId === previousProps.room.roomId) {
             return;
         }
 
         this.parseTimeline();
 
-        this.client.on("Room.timeline", (event, room, toStartOfTimeline) => {
-            if (!this.props.room || (this.props.room.roomId !== room.roomId)) {
-                return;
+        this.client.on('Room.timeline', room => {
+            if (this.props.room.roomId === room.roomId) {
+                this.parseTimeline();
             }
-
-            this.parseTimeline();
         });
     }
 }

@@ -8,7 +8,7 @@ interface Props {
 
 interface State {
     rooms: Room[];
-    selectedRoomId: string;
+    selectedRoom: Room|null;
 }
 
 class RoomList extends React.Component<Props, State> {
@@ -20,7 +20,7 @@ class RoomList extends React.Component<Props, State> {
 
         this.state = {
             rooms: [],
-            selectedRoomId: ''
+            selectedRoom: null
         };
     }
 
@@ -29,7 +29,7 @@ class RoomList extends React.Component<Props, State> {
             <ul className="roomList">
                 {this.state.rooms.map(room => (
                     <li key={room.roomId}
-                        className={this.state.selectedRoomId === room.roomId ? 'selected' : ''}
+                        className={this.state.selectedRoom?.roomId === room.roomId ? 'selected' : ''}
                         onClick={() => this.selectRoom(room)}>
                         <span>{room.name}</span>
                     </li>
@@ -38,11 +38,9 @@ class RoomList extends React.Component<Props, State> {
         );
     }
 
-    selectRoom(room: Room|undefined) {
-        if (room) {
-            this.setState({selectedRoomId: room.roomId})
-            this.props.onSelectionChange(room);
-        }
+    selectRoom(room: Room) {
+        this.setState({selectedRoom: room})
+        this.props.onSelectionChange(room);
     }
 
     componentDidMount() {
@@ -55,7 +53,9 @@ class RoomList extends React.Component<Props, State> {
                 this.setState({rooms});
 
                 let firstRoom = rooms.find(() => true);
-                this.selectRoom(firstRoom);
+                if (firstRoom) {
+                    this.selectRoom(firstRoom);
+                }
             })
             .catch(error => {
                 console.log('Failed to fetch joined rooms: ' + error)
