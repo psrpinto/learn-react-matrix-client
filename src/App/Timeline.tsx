@@ -1,6 +1,6 @@
 import React from "react";
 import TimelineEvent from "./TimelineEvent";
-import {IEvent, MatrixClient, Room} from "matrix-js-sdk";
+import {IEvent, MatrixClient, MatrixEvent, Room} from "matrix-js-sdk";
 
 interface Props {
     client: MatrixClient;
@@ -22,6 +22,8 @@ class Timeline extends React.Component<Props, State> {
         this.state = {
             messages: [],
         }
+
+        this.handleTimelineEvent = this.handleTimelineEvent.bind(this);
     }
 
     render() {
@@ -48,8 +50,10 @@ class Timeline extends React.Component<Props, State> {
         this.setState({messages});
     }
 
-    componentDidMount() {
-        this.parseTimeline();
+    handleTimelineEvent(event: MatrixEvent, room: Room) {
+        if (this.props.room.roomId === room.roomId) {
+            this.parseTimeline();
+        }
     }
 
     componentDidUpdate(previousProps: Props) {
@@ -58,12 +62,15 @@ class Timeline extends React.Component<Props, State> {
         }
 
         this.parseTimeline();
+    }
 
-        this.client.on('Room.timeline', room => {
-            if (this.props.room.roomId === room.roomId) {
-                this.parseTimeline();
-            }
-        });
+    componentDidMount() {
+        this.client.on('Room.timeline', this.handleTimelineEvent);
+        this.parseTimeline();
+    }
+
+    componentWillUnmount() {
+        this.client.off('Room.timeline', this.handleTimelineEvent);
     }
 }
 

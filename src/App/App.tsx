@@ -81,6 +81,10 @@ class App extends React.Component<{}, State> {
             console.log('Initial sync failed: ' + error);
         });
     }
+
+    componentWillUnmount() {
+        this.client.stopClient();
+    }
 }
 
 export default App;
