@@ -21,17 +21,32 @@
     float: left;
     margin: 0;
     padding-left: 20px;
-    width: 80%;
+    width: 50%;
     height: 100%;
 }
 
 .composer {
     border: 1px solid saddlebrown;
+    padding: 10px;
+}
+
+.composer textarea {
+    width: 80%;
+    height: 36px;
+}
+
+.composer button {
+    display: inline-block;
+    float: right;
+    width: 15%;
+    height: 40px;
+    margin-right: 10px;
 }
 
 .timeline {
     border: 1px solid green;
     list-style: none;
+    padding: 10px;
 }
 
 .timelineEvent {
