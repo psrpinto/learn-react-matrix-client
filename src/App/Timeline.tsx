@@ -1,8 +1,20 @@
 import React from "react";
 import TimelineEvent from "./TimelineEvent";
+import {IEvent, MatrixClient, Room} from "matrix-js-sdk";
 
-class Timeline extends React.Component {
-    constructor(props) {
+interface Props {
+    client: MatrixClient;
+    room: Room|null;
+}
+
+interface State {
+    messages: IEvent[];
+}
+
+class Timeline extends React.Component<Props, State> {
+    client: MatrixClient;
+
+    constructor(props: Props) {
         super(props);
 
         this.client = props.client;
@@ -24,19 +36,23 @@ class Timeline extends React.Component {
         );
     }
 
-    parseTimeline() {
-        let events = this.props.room.timeline.map(timelineEntry => {
-            return timelineEntry.event;
+    private parseTimeline() {
+        if (!this.props.room) {
+            return;
+        }
+
+        let events = this.props.room.timeline.map((timelineEvent) => {
+            return timelineEvent.getEffectiveEvent();
         });
 
         let messages = events.filter(event => {
-            return event.type === 'm.room.message' && event.content.body;
+            return event.type === 'm.room.message' && event.content && event.content.body;
         });
 
         this.setState({messages});
     }
 
-    componentDidUpdate(previousProps) {
+    componentDidUpdate(previousProps: Props) {
         if (!this.props.room) {
             return;
         }
@@ -48,7 +64,7 @@ class Timeline extends React.Component {
         this.parseTimeline();
 
         this.client.on("Room.timeline", (event, room, toStartOfTimeline) => {
-            if (this.props.room.roomId !== room.roomId) {
+            if (!this.props.room || (this.props.room.roomId !== room.roomId)) {
                 return;
             }
 
