@@ -1,7 +1,18 @@
 import React from "react";
+import {IEvent} from "matrix-js-sdk";
 
-class TimelineEvent extends React.Component {
-    constructor(props) {
+interface Props {
+    event: IEvent;
+}
+
+interface State {
+    body: string;
+    sender: string;
+    timestamp: string;
+}
+
+class TimelineEvent extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
         let event = this.props.event;
