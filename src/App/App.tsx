@@ -3,6 +3,7 @@ import React from "react";
 import * as sdk from "matrix-js-sdk";
 import RoomList from "./RoomList";
 import Timeline from "./Timeline";
+import Composer from "./Composer";
 import {MatrixClient, Room} from "matrix-js-sdk";
 
 enum Status {
@@ -39,8 +40,11 @@ class App extends React.Component<{}, State> {
                     <RoomList client={this.client}
                               onSelectionChange={(newlySelectedRoom: Room) => this.setState({selectedRoom: newlySelectedRoom})}/>
                     {this.state.selectedRoom &&
-                        <Timeline client={this.client}
-                                  room={this.state.selectedRoom}/>
+                        <div className="rightSide">
+                            <Composer />
+                            <Timeline client={this.client}
+                                      room={this.state.selectedRoom}/>
+                        </div>
                     }
                 </div>
             );

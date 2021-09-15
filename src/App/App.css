@@ -4,6 +4,7 @@
     width: 10%;
     cursor: pointer;
     padding: 10px;
+    margin: 0;
     list-style: none;
 }
 .roomList li {
@@ -16,13 +17,20 @@
     background-color: aliceblue;
 }
 
-.timeline {
-    border: 1px solid green;
+.rightSide {
     float: left;
+    margin: 0;
+    padding-left: 20px;
     width: 80%;
     height: 100%;
-    padding: 20px;
-    margin-left: 10px;
+}
+
+.composer {
+    border: 1px solid saddlebrown;
+}
+
+.timeline {
+    border: 1px solid green;
     list-style: none;
 }
 
