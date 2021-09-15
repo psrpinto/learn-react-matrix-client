@@ -50,6 +50,7 @@ class RoomList extends React.Component<Props, State> {
                     return this.client.getRoom(roomId);
                 });
 
+                rooms.sort((a, b) => a.name >= b.name ? 1 : -1);
                 this.setState({rooms});
 
                 let firstRoom = rooms.find(() => true);
