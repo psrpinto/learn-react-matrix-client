@@ -42,6 +42,8 @@ class Composer extends React.Component<Props, State> {
 
         this.client.sendTextMessage(this.props.room.roomId, this.state.message)
             .catch(error => console.log('Failed to send message: ' + error));
+
+        this.setState({message: ''});
     }
 }
 
