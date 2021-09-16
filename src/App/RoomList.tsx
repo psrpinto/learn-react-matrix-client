@@ -1,27 +1,27 @@
-import React from "react";
-import {MatrixClient, Room} from "matrix-js-sdk";
+import React from "react"
+import {MatrixClient, Room} from "matrix-js-sdk"
 
 interface Props {
-    client: MatrixClient;
-    onSelectionChange: (room: Room) => void;
+    client: MatrixClient
+    onSelectionChange: (room: Room) => void
 }
 
 interface State {
-    rooms: Room[];
-    selectedRoom: Room|null;
+    rooms: Room[]
+    selectedRoom: Room|null
 }
 
 class RoomList extends React.Component<Props, State> {
-    client: MatrixClient;
+    client: MatrixClient
 
     constructor(props: Props) {
-        super(props);
-        this.client = props.client;
+        super(props)
+        this.client = props.client
 
         this.state = {
             rooms: [],
             selectedRoom: null
-        };
+        }
     }
 
     render() {
@@ -35,33 +35,33 @@ class RoomList extends React.Component<Props, State> {
                     </li>
                 ))}
             </ul>
-        );
+        )
     }
 
     selectRoom(room: Room) {
         this.setState({selectedRoom: room})
-        this.props.onSelectionChange(room);
+        this.props.onSelectionChange(room)
     }
 
     componentDidMount() {
         this.client.getJoinedRooms()
             .then(response => {
                 const rooms = response.joined_rooms.map((roomId: string): Room => {
-                    return this.client.getRoom(roomId);
-                });
+                    return this.client.getRoom(roomId)
+                })
 
-                rooms.sort((a, b) => a.name >= b.name ? 1 : -1);
-                this.setState({rooms});
+                rooms.sort((a, b) => a.name >= b.name ? 1 : -1)
+                this.setState({rooms})
 
-                let firstRoom = rooms.find(() => true);
+                let firstRoom = rooms.find(() => true)
                 if (firstRoom) {
-                    this.selectRoom(firstRoom);
+                    this.selectRoom(firstRoom)
                 }
             })
             .catch(error => {
                 console.log('Failed to fetch joined rooms: ' + error)
-            });
+            })
     }
 }
 
-export default RoomList;
+export default RoomList

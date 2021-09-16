@@ -1,29 +1,29 @@
-import React from "react";
-import TimelineEvent from "./TimelineEvent";
-import {IEvent, MatrixClient, MatrixEvent, Room} from "matrix-js-sdk";
+import React from "react"
+import TimelineEvent from "./TimelineEvent"
+import {IEvent, MatrixClient, MatrixEvent, Room} from "matrix-js-sdk"
 
 interface Props {
-    client: MatrixClient;
-    room: Room;
+    client: MatrixClient
+    room: Room
 }
 
 interface State {
-    messages: IEvent[];
+    messages: IEvent[]
 }
 
 class Timeline extends React.Component<Props, State> {
-    client: MatrixClient;
+    client: MatrixClient
 
     constructor(props: Props) {
-        super(props);
+        super(props)
 
-        this.client = props.client;
+        this.client = props.client
 
         this.state = {
             messages: [],
         }
 
-        this.handleTimelineEvent = this.handleTimelineEvent.bind(this);
+        this.handleTimelineEvent = this.handleTimelineEvent.bind(this)
     }
 
     render() {
@@ -35,43 +35,43 @@ class Timeline extends React.Component<Props, State> {
                     </li>
                 ))}
             </ul>
-        );
+        )
     }
 
     private parseTimeline() {
         let events = this.props.room.timeline.map((timelineEvent) => {
-            return timelineEvent.getEffectiveEvent();
-        });
+            return timelineEvent.getEffectiveEvent()
+        })
 
         let messages = events.filter(event => {
-            return event.type === 'm.room.message' && event.content && event.content.body;
-        });
+            return event.type === 'm.room.message' && event.content && event.content.body
+        })
 
-        this.setState({messages});
+        this.setState({messages})
     }
 
     handleTimelineEvent(event: MatrixEvent, room: Room) {
         if (this.props.room.roomId === room.roomId) {
-            this.parseTimeline();
+            this.parseTimeline()
         }
     }
 
     componentDidUpdate(previousProps: Props) {
         if (previousProps.room && this.props.room.roomId === previousProps.room.roomId) {
-            return;
+            return
         }
 
-        this.parseTimeline();
+        this.parseTimeline()
     }
 
     componentDidMount() {
-        this.client.on('Room.timeline', this.handleTimelineEvent);
-        this.parseTimeline();
+        this.client.on('Room.timeline', this.handleTimelineEvent)
+        this.parseTimeline()
     }
 
     componentWillUnmount() {
-        this.client.off('Room.timeline', this.handleTimelineEvent);
+        this.client.off('Room.timeline', this.handleTimelineEvent)
     }
 }
 
-export default Timeline;
+export default Timeline

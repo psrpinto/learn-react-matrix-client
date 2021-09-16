@@ -1,10 +1,10 @@
-import './App.css';
-import React from "react";
-import * as sdk from "matrix-js-sdk";
-import {MatrixClient, Room} from "matrix-js-sdk";
-import RoomList from "./RoomList";
-import Timeline from "./Timeline";
-import Composer from "./Composer";
+import './App.css'
+import React from "react"
+import * as sdk from "matrix-js-sdk"
+import {MatrixClient, Room} from "matrix-js-sdk"
+import RoomList from "./RoomList"
+import Timeline from "./Timeline"
+import Composer from "./Composer"
 
 enum Status {
     Loading = "loading",
@@ -12,24 +12,24 @@ enum Status {
 }
 
 interface State {
-    status: Status;
-    selectedRoom: Room|null;
+    status: Status
+    selectedRoom: Room|null
 }
 
 class App extends React.Component<{}, State> {
-    client: MatrixClient;
+    client: MatrixClient
 
     constructor(props: {}) {
-        super(props);
+        super(props)
         this.client = sdk.createClient({
             baseUrl: 'http://localhost:8008',
             userId: '@admin:matrix.test',
             accessToken: 'syt_YWRtaW4_WgzGYbdhFRZdOJTGxUzx_0NPo3T',
-        });
+        })
         this.state = {
             status: Status.Loading,
             selectedRoom: null,
-        };
+        }
     }
 
     render() {
@@ -37,12 +37,12 @@ class App extends React.Component<{}, State> {
 
         let loadingScreen = isLoading
             ? <div className="LoadingScreen">Loading...</div>
-            : <></>;
+            : <></>
 
         let roomList = !isLoading
             ? <RoomList client={this.client}
                         onSelectionChange={(newlySelectedRoom: Room) => this.setState({selectedRoom: newlySelectedRoom})}/>
-            : <></>;
+            : <></>
 
         let rightSide = !isLoading && this.state.selectedRoom
             ?
@@ -50,7 +50,7 @@ class App extends React.Component<{}, State> {
                     <Composer client={this.client} room={this.state.selectedRoom}/>
                     <Timeline client={this.client} room={this.state.selectedRoom}/>
                 </div>
-            : <></>;
+            : <></>
 
 
         return (
@@ -59,7 +59,7 @@ class App extends React.Component<{}, State> {
                 {roomList}
                 {rightSide}
             </div>
-        );
+        )
     }
 
     componentDidMount() {
@@ -69,17 +69,17 @@ class App extends React.Component<{}, State> {
                 return
             }
 
-            this.setState({status: Status.Loaded});
-        });
+            this.setState({status: Status.Loaded})
+        })
 
         this.client.startClient({}).catch(error => {
             this.setState(() => { throw new Error(`Initial sync failed [error = ${error}]`) })
-        });
+        })
     }
 
     componentWillUnmount() {
-        this.client.stopClient();
+        this.client.stopClient()
     }
 }
 
-export default App;
+export default App
