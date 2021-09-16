@@ -64,7 +64,7 @@ class App extends React.Component<{}, State> {
 
     componentDidMount() {
         this.client.once('sync', status => {
-            if (status === 'PREPARED') {
+            if (status !== 'PREPARED') {
                 this.setState(() => { throw new Error(`Initial sync failed [status = ${status}]`) })
                 return
             }
