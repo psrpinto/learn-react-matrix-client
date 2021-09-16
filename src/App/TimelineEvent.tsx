@@ -27,8 +27,8 @@ class TimelineEvent extends React.Component<Props, State> {
     render() {
         return (
             <div className="timelineEvent">
-                <span className="timestamp">{this.state.timestamp}</span>&nbsp
-                <span className="sender">{this.state.sender}</span>:&nbsp
+                <span className="timestamp">{this.state.timestamp}</span>&nbsp;
+                <span className="sender">{this.state.sender}</span>:&nbsp;
                 <span>{this.state.body}</span>
             </div>
         )
