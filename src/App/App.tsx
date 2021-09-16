@@ -1,10 +1,11 @@
 import './App.css';
 import React from "react";
 import * as sdk from "matrix-js-sdk";
+import {MatrixClient, Room} from "matrix-js-sdk";
 import RoomList from "./RoomList";
 import Timeline from "./Timeline";
 import Composer from "./Composer";
-import {MatrixClient, Room} from "matrix-js-sdk";
+import ErrorBoundary from "./ErrorBoundary";
 
 enum Status {
     Loading = "loading",
@@ -55,11 +56,13 @@ class App extends React.Component<{}, State> {
 
 
         return (
-            <div className="App">
-                {loadingScreen}
-                {roomList}
-                {rightSide}
-            </div>
+            <ErrorBoundary>
+                <div className="App">
+                    {loadingScreen}
+                    {roomList}
+                    {rightSide}
+                </div>
+            </ErrorBoundary>
         );
     }
 
