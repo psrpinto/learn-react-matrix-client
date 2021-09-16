@@ -5,12 +5,10 @@ import {MatrixClient, Room} from "matrix-js-sdk";
 import RoomList from "./RoomList";
 import Timeline from "./Timeline";
 import Composer from "./Composer";
-import ErrorBoundary from "./ErrorBoundary";
 
 enum Status {
     Loading = "loading",
     Loaded = "loaded",
-    Failed = "Failed",
 }
 
 interface State {
@@ -56,29 +54,26 @@ class App extends React.Component<{}, State> {
 
 
         return (
-            <ErrorBoundary>
-                <div className="App">
-                    {loadingScreen}
-                    {roomList}
-                    {rightSide}
-                </div>
-            </ErrorBoundary>
+            <div className="App">
+                {loadingScreen}
+                {roomList}
+                {rightSide}
+            </div>
         );
     }
 
     componentDidMount() {
         this.client.once('sync', status => {
-            if (status !== 'PREPARED') {
-                this.setState({status: Status.Failed});
-                return;
+            if (status === 'PREPARED') {
+                this.setState(() => { throw new Error(`Initial sync failed [status = ${status}]`) })
+                return
             }
 
             this.setState({status: Status.Loaded});
         });
 
         this.client.startClient({}).catch(error => {
-            this.setState({status: Status.Failed});
-            console.log('Initial sync failed: ' + error);
+            this.setState(() => { throw new Error(`Initial sync failed [error = ${error}]`) })
         });
     }
 
