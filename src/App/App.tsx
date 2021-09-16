@@ -34,34 +34,31 @@ class App extends React.Component<{}, State> {
     }
 
     render() {
-        if (this.state.status === Status.Loaded) {
-            return (
-                <div className="App">
-                    <RoomList client={this.client}
-                              onSelectionChange={(newlySelectedRoom: Room) => this.setState({selectedRoom: newlySelectedRoom})}/>
-                    {this.state.selectedRoom &&
-                        <div className="rightSide">
-                            <Composer client={this.client}
-                                      room={this.state.selectedRoom}/>
-                            <Timeline client={this.client}
-                                      room={this.state.selectedRoom}/>
-                        </div>
-                    }
-                </div>
-            );
-        }
+        let isLoading = this.state.status === Status.Loading
 
-        if (this.state.status === Status.Loading) {
-            return (
-                <div className="LoadingScreen">
-                    Loading....
+        let loadingScreen = isLoading
+            ? <div className="LoadingScreen">Loading...</div>
+            : <></>;
+
+        let roomList = !isLoading
+            ? <RoomList client={this.client}
+                        onSelectionChange={(newlySelectedRoom: Room) => this.setState({selectedRoom: newlySelectedRoom})}/>
+            : <></>;
+
+        let rightSide = !isLoading && this.state.selectedRoom
+            ?
+                <div className="rightSide">
+                    <Composer client={this.client} room={this.state.selectedRoom}/>
+                    <Timeline client={this.client} room={this.state.selectedRoom}/>
                 </div>
-            );
-        }
+            : <></>;
+
 
         return (
-            <div className="ErrorScreen">
-                Failed to load
+            <div className="App">
+                {loadingScreen}
+                {roomList}
+                {rightSide}
             </div>
         );
     }
